@@ -3,6 +3,7 @@
 ## Used technologies
 - PHP 8.1.1
 - Laravel 9.x
+- MySQL
 - Docker
 
 ## Requirements
@@ -26,7 +27,7 @@
 2. Update the .env file to connect with docker containers
     ```dosini
     APP_NAME=ProjectName
-    APP_URL=http://localhost:8880
+    APP_URL=http://localhost:8080
     
     DB_CONNECTION=mysql
     DB_HOST=mysql
@@ -63,7 +64,7 @@
 
 8. Access the project page
 
-   [http://localhost:8880](http://localhost:8880)
+   [http://localhost:8080](http://localhost:8080)
 
 ## Testing the project
 
