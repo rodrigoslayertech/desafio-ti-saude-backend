@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ConsultaController;
 use App\Http\Controllers\Api\EspecialidadeController;
 use App\Http\Controllers\Api\MedicoController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\PacienteController;
-use App\Http\Controllers\Api\PlanoSaudeController;
+use App\Http\Controllers\Api\PlanosController;
 use App\Http\Controllers\Api\ProcedimentoController;
+use App\Http\Controllers\Api\VinculosController;
 use App\Models\User;
 
 use Illuminate\Http\Request;
@@ -38,17 +39,26 @@ Route::group(['middleware' => 'apiJwt', 'prefix' => 'pacientes'], function () {
    Route::get('/', [PacienteController::class, 'index']);
    Route::post('/', [PacienteController::class, 'create']);
    Route::get('/{id}', [PacienteController::class, 'show']);
-   Route::patch('/{id}', [PacienteController::class, 'update']);
+   Route::put('/{id}', [PacienteController::class, 'update']);
    Route::delete('/{id}', [PacienteController::class, 'destroy']);
+});
+
+// ! Vinculos
+Route::group(['middleware' => 'apiJwt', 'prefix' => 'vinculos'], function () {
+   Route::get('/', [VinculosController::class, 'index']);
+   Route::post('/', [VinculosController::class, 'create']);
+   Route::get('/{id}', [VinculosController::class, 'show']);
+   Route::put('/{id}', [VinculosController::class, 'update']);
+   Route::delete('/{id}', [VinculosController::class, 'destroy']);
 });
 
 // ! Planos
 Route::group(['middleware' => 'apiJwt', 'prefix' => 'planos'], function () {
-   Route::get('/', [PlanoSaudeController::class, 'index']);
-   Route::post('/', [PlanoSaudeController::class, 'create']);
-   Route::get('/{id}', [PlanoSaudeController::class, 'show']);
-   Route::patch('/{id}', [PlanoSaudeController::class, 'update']);
-   Route::delete('/{id}', [PlanoSaudeController::class, 'destroy']);
+   Route::get('/', [PlanosController::class, 'index']);
+   Route::post('/', [PlanosController::class, 'create']);
+   Route::get('/{id}', [PlanosController::class, 'show']);
+   Route::put('/{id}', [PlanosController::class, 'update']);
+   Route::delete('/{id}', [PlanosController::class, 'destroy']);
 });
 
 // ! Consultas
@@ -56,7 +66,7 @@ Route::group(['middleware' => 'apiJwt', 'prefix' => 'consultas'], function () {
    Route::get('/', [ConsultaController::class, 'index']);
    Route::post('/', [ConsultaController::class, 'create']);
    Route::get('/{id}', [ConsultaController::class, 'show']);
-   Route::patch('/{id}', [ConsultaController::class, 'update']);
+   Route::put('/{id}', [ConsultaController::class, 'update']);
    Route::delete('/{id}', [ConsultaController::class, 'destroy']);
 });
 
@@ -65,7 +75,7 @@ Route::group(['middleware' => 'apiJwt', 'prefix' => 'procedimentos'], function (
    Route::get('/', [ProcedimentoController::class, 'index']);
    Route::post('/', [ProcedimentoController::class, 'create']);
    Route::get('/{id}', [ProcedimentoController::class, 'show']);
-   Route::patch('/{id}', [ProcedimentoController::class, 'update']);
+   Route::put('/{id}', [ProcedimentoController::class, 'update']);
    Route::delete('/{id}', [ProcedimentoController::class, 'destroy']);
 });
 
@@ -74,7 +84,7 @@ Route::group(['middleware' => 'apiJwt', 'prefix' => 'medicos'], function () {
    Route::get('/', [MedicoController::class, 'index']);
    Route::post('/', [MedicoController::class, 'create']);
    Route::get('/{id}', [MedicoController::class, 'show']);
-   Route::patch('/{id}', [MedicoController::class, 'update']);
+   Route::put('/{id}', [MedicoController::class, 'update']);
    Route::delete('/{id}', [MedicoController::class, 'destroy']);
 });
 
@@ -83,6 +93,6 @@ Route::group(['middleware' => 'apiJwt', 'prefix' => 'especialidades'], function 
    Route::get('/', [EspecialidadeController::class, 'index']);
    Route::post('/', [EspecialidadeController::class, 'create']);
    Route::get('/{id}', [EspecialidadeController::class, 'show']);
-   Route::patch('/{id}', [EspecialidadeController::class, 'update']);
+   Route::put('/{id}', [EspecialidadeController::class, 'update']);
    Route::delete('/{id}', [EspecialidadeController::class, 'destroy']);
 });
