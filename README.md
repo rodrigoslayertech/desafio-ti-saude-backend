@@ -1,5 +1,8 @@
 # Ti.Saúde - Desafio Back-end
 
+Insomnia JSON in root folder:
+`Insomnia_2022-11-23.json`
+
 ## Used technologies
 - PHP 8.1.1
 - Laravel 9.x
