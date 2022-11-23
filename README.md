@@ -32,9 +32,9 @@
     DB_CONNECTION=mysql
     DB_HOST=mysql
     DB_PORT=3306
-    DB_DATABASE=name_you_want
-    DB_USERNAME=root
-    DB_PASSWORD=root
+    DB_DATABASE=YOUR_DATABASE_NAME
+    DB_USERNAME=YOUR_USERNAME
+    DB_PASSWORD=YOUR_PASSWORD
     ```
 
 3. Up docker containers
