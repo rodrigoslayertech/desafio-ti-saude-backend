@@ -16,6 +16,7 @@ return new class extends Migration
         // e:consulta
         Schema::create('consultas', function (Blueprint $table) {
             $table->id();
+
             $table->date('data');
             $table->dateTime('hora');
             $table->boolean('particular');
