@@ -1,13 +1,13 @@
 <?php
-namespace App\Http\Controllers\Api;
 
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Pacientes;
+use App\Models\Planos;
 use Illuminate\Support\Facades\Validator;
 
-class PacienteController extends Controller
+class PlanosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class PacienteController extends Controller
      */
     public function index ()
     {
-        $pacientes = Pacientes::with(['telefones', 'vinculos'])->get();
-        return Response()->json($pacientes);
+        $Planos = Planos::with(['vinculos'])->get();
+        return Response()->json($Planos);
     }
 
     /**
@@ -31,8 +31,8 @@ class PacienteController extends Controller
         // Request Validate input
         $input = $Request->all();
         $Validator = Validator::make($input, [
-            'nome' => 'required',
-            'nascimento' => 'required'
+            'descricao' => 'required',
+            'telefone' => 'required'
         ]);
 
         if ( $Validator->fails() ) {
@@ -44,9 +44,9 @@ class PacienteController extends Controller
         }
 
         // Create Paciente
-        $Paciente = new Pacientes;
-        $Paciente->nome = $input['nome'];
-        $Paciente->dataNascimento = $input['nascimento'];
+        $Paciente = new Planos;
+        $Paciente->descricao = $input['descricao'];
+        $Paciente->telefone = $input['telefone'];
         $saved = $Paciente->save();
 
         // Response with JSON status
@@ -65,7 +65,8 @@ class PacienteController extends Controller
      */
     public function show ($id)
     {
-        $data = Pacientes::where('id', $id)->first();
+        $data = Planos::where('id', $id)->with(['vinculos'])->first();
+        #dd($paciente, $id);
         return Response()->json($data);
     }
 
@@ -81,22 +82,22 @@ class PacienteController extends Controller
         // Request Validate input
         $input = $Request->all();
         $Validator = Validator::make($input, [
-            'nome' => 'required',
-            'nascimento' => 'required'
+            'descricao' => 'required',
+            'telefone' => 'required'
         ]);
 
         if ( $Validator->fails() ) {
             return Response()->json([
-                "success" => true,
-                'type' => 'message',
-                "message" => 'Validação falhou.'
+                "success" => count($Validator->errors()) === 0 ? true : false,
+                'type' => 'error',
+                "errors" => $Validator->errors()
             ]);
         }
 
         // Set input data
-        $updated = Pacientes::where('id', $id)->update([
-            'nome' => $input['nome'],
-            'dataNascimento' => $input['nascimento']
+        $updated = Planos::where('id', $id)->update([
+            'descricao' => $input['descricao'],
+            'telefone' => $input['telefone']
         ]);
 
         // Response with JSON status
@@ -117,7 +118,7 @@ class PacienteController extends Controller
     {
         // Validate the request...
 
-        $deleted = Pacientes::destroy($id);
+        $deleted = Planos::destroy($id);
 
         // Response with JSON status
         return Response()->json([

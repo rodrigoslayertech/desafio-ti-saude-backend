@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Vinculos;
 use Illuminate\Http\Request;
-use App\Models\Consultas;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
-class ConsultaController extends Controller
+class VinculosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +17,8 @@ class ConsultaController extends Controller
      */
     public function index()
     {
-        $Pacientes = Consultas::all();
-        return Response()->json($Pacientes);
+        $pacientes = Vinculos::all();
+        return Response()->json($pacientes);
     }
 
     /**
@@ -31,13 +32,9 @@ class ConsultaController extends Controller
         // Request Validate input
         $input = $Request->all();
         $Validator = Validator::make($input, [
+            'contrato' => 'required|unique:vinculos,contrato',
             'paciente' => 'required|int|exists:App\Models\Pacientes,id',
-            'data' => 'required|date',
-            'hora' => 'required|date_format:H:i',
-            'particular' => 'required|boolean',
-            'vinculo' => 'nullable|int|exists:App\Models\Vinculos,id|required_if:particular,false',
-            'procedimento' => 'nullable|int|exists:App\Models\Procedimentos,id',
-            'medico' => 'required|int|exists:App\Models\Medicos,id',
+            'plano' => 'required|int|exists:App\Models\Planos,id',
         ]);
 
         if ( $Validator->fails() ) {
@@ -49,19 +46,11 @@ class ConsultaController extends Controller
         }
 
         // Create Model data
-        $Model = new Consultas;
-        $Model->paciente = $input['paciente'];
-        $Model->data = $input['data'];
-        $Model->hora = $input['hora'];
-        $Model->particular = $input['particular'];
-        if (@$input['vinculo']) {
-            $Model->vinculo = $input['vinculo'];
-        }
-        if (@$input['procedimento']) {
-            $Model->procedimento = $input['procedimento'];
-        }
-        $Model->medico = $input['medico'];
-        $success = $Model->save();
+        $Vinculo = new Vinculos;
+        $Vinculo->contrato = $input['contrato'];
+        $Vinculo->paciente = $input['paciente'];
+        $Vinculo->plano = $input['plano'];
+        $success = $Vinculo->save();
 
         // Response with JSON status
         return Response()->json([
@@ -78,7 +67,8 @@ class ConsultaController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Vinculos::where('id', $id)->first();
+        return Response()->json($data);
     }
 
     /**
@@ -88,7 +78,7 @@ class ConsultaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $Request, $id)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -103,7 +93,7 @@ class ConsultaController extends Controller
     {
         // Validate the request...
 
-        $deleted = Consultas::destroy($id);
+        $deleted = Vinculos::destroy($id);
 
         // Response with JSON status
         return Response()->json([

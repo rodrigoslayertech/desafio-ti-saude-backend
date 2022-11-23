@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Especialidades;
+use Illuminate\Support\Facades\Validator;
 
 class EspecialidadeController extends Controller
 {
@@ -14,7 +16,8 @@ class EspecialidadeController extends Controller
      */
     public function index()
     {
-        //
+        $Pacientes = Especialidades::all();
+        return Response()->json($Pacientes);
     }
 
     /**
@@ -23,9 +26,32 @@ class EspecialidadeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $Request)
     {
-        //
+        // Request Validate input
+        $input = $Request->all();
+        $Validator = Validator::make($input, [
+            'nome' => 'required',
+        ]);
+
+        if ( $Validator->fails() ) {
+            return Response()->json([
+                "success" => count($Validator->errors()) === 0 ? true : false,
+                'type' => 'error',
+                "errors" => $Validator->errors()
+            ]);
+        }
+
+        // Create Model data
+        $Model = new Especialidades;
+        $Model->nome = $input['nome'];
+        $success = $Model->save();
+
+        // Response with JSON status
+        return Response()->json([
+            'type' => 'success',
+            "success" => $success
+        ]);
     }
 
     /**
@@ -36,7 +62,8 @@ class EspecialidadeController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = Especialidades::where('id', $id)->first();
+        return Response()->json($data);
     }
 
     /**
@@ -46,7 +73,7 @@ class EspecialidadeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $Request, $id)
     {
         //
     }

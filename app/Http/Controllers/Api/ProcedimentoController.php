@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Procedimentos;
+use Illuminate\Support\Facades\Validator;
+use Money\Money;
+use Money\Currency;
 
 class ProcedimentoController extends Controller
 {
@@ -14,7 +18,8 @@ class ProcedimentoController extends Controller
      */
     public function index()
     {
-        //
+        $Pacientes = Procedimentos::all();
+        return Response()->json($Pacientes);
     }
 
     /**
@@ -23,9 +28,38 @@ class ProcedimentoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $Request)
     {
-        //
+        // Request Validate input
+        $input = $Request->all();
+        $Validator = Validator::make($input, [
+            'nome' => 'required',
+            'valor' => 'required',
+        ]);
+
+        if ( $Validator->fails() ) {
+            return Response()->json([
+                "success" => count($Validator->errors()) === 0 ? true : false,
+                'type' => 'error',
+                "errors" => $Validator->errors()
+            ]);
+        }
+
+        // Create Model data
+        $Model = new Procedimentos;
+        $Model->nome = $input['nome'];
+        $Model->valor = new Money
+        (
+            $input['valor'],
+            new Currency('BRL')
+        );
+        $success = $Model->save();
+
+        // Response with JSON status
+        return Response()->json([
+            'type' => 'success',
+            "success" => $success
+        ]);
     }
 
     /**
@@ -34,9 +68,10 @@ class ProcedimentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show ($id)
     {
-        //
+        $data = Procedimentos::where('id', $id)->first();
+        return Response()->json($data);
     }
 
     /**
@@ -46,7 +81,7 @@ class ProcedimentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $Request, $id)
     {
         //
     }
@@ -59,6 +94,15 @@ class ProcedimentoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Validate the request...
+
+        $deleted = Procedimentos::destroy($id);
+
+        // Response with JSON status
+        return Response()->json([
+            "success" => true,
+            'type' => 'status',
+            "status" => $deleted
+        ]);
     }
 }
