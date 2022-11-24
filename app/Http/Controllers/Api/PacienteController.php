@@ -115,7 +115,18 @@ class PacienteController extends Controller
      */
     public function destroy ($id)
     {
-        // Validate the request...
+        // Validate deletion
+        $Validator = Validator::make(['id' => $id], [
+            'id' => 'required|int|unique:App\Models\Consultas,paciente'
+        ]);
+
+        if ( $Validator->fails() ) {
+            return Response()->json([
+                "success" => count($Validator->errors()) === 0 ? true : false,
+                'type' => 'error',
+                "errors" => [true] // Este Paciente existe na tabela consultas.
+            ]);
+        }
 
         $deleted = Pacientes::destroy($id);
 
